@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Averia+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Mansalva&display=swap');
+
+:root {
+	--font-body: 'Averia Libre', Georgia, serif;
+	--font-heading: 'Mansalva', 'Averia Libre', cursive;
+
+	--ink: #1c2540;
+	--ink-soft: #4a5578;
+	--snow: #f4f8ff;
+	--panel: rgba(244, 248, 255, 0.93);
+	--panel-dim: rgba(226, 235, 252, 0.9);
+
+	--hot: #ff6b3d;
+	--warm: #ffb84d;
+	--cold: #5aa9f5;
+	--frozen: #b9a9ff;
+	--accent: #e8643a;
+
+	--blob-a: 34px 46px 38px 52px / 44px 34px 50px 36px;
+	--blob-b: 52px 36px 48px 34px / 36px 50px 34px 46px;
+	--snow-h: clamp(130px, 21vh, 230px);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+	font-family: var(--font-body);
+	font-weight: 300;
+	color: var(--ink);
+	background: #1b1f3b;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-family: var(--font-heading);
+	font-weight: 400;
+	margin: 0;
+	line-height: 1.1;
+}
+
+button,
+input {
+	font-family: inherit;
+	font-weight: 400;
+	color: var(--ink);
+}
+
+button {
+	cursor: pointer;
+	border: none;
+}
+
+button:focus-visible,
+input:focus-visible {
+	outline: 3px solid rgba(90, 169, 245, 0.8);
+	outline-offset: 2px;
+}
+
+/* shared lineless "blob" button */
+.btn {
+	background: var(--accent);
+	color: #fff;
+	font-size: 1.15rem;
+	padding: 0.7em 1.6em;
+	border-radius: var(--blob-a);
+	transition:
+		transform 0.15s ease,
+		filter 0.15s ease;
+}
+.btn:hover:not(:disabled) {
+	transform: translateY(-2px) rotate(-0.6deg);
+	filter: brightness(1.06);
+}
+.btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+.btn.ghost {
+	background: rgba(244, 248, 255, 0.85);
+	color: var(--ink);
+}
+
+.panel {
+	background: var(--panel);
+	border-radius: var(--blob-b);
+	padding: 1.5rem 1.75rem;
+}
