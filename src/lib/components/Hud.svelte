@@ -29,7 +29,7 @@
 	.hud {
 		position: absolute;
 		left: 50%;
-		bottom: 0.7rem;
+		bottom: 4rem;
 		transform: translateX(-50%);
 		width: min(92vw, 720px);
 		color: var(--ink);

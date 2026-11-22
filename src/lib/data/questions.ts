@@ -1,5 +1,9 @@
 /**
- * Question data for all three rounds (sunset, dusk, midnight).
+ * Question bank for the three rounds (sunset, dusk, midnight).
+ *
+ * Each round has a *pool* of questions of any size — add as many as you like. Every game picks
+ * QUESTIONS_PER_ROUND of them at random per round (see `pickQuestions`). Each question `id`
+ * must be unique across the whole bank.
  *
  * Every question is a *template* with two phrasings:
  *   - `self`  : asked of the person the question is about ("How many siblings do you have?")
@@ -173,6 +177,25 @@ const sunset: Question[] = [
 		],
 		self: 'Rank these ice cream flavors from your favorite to your least favorite.',
 		other: 'Guess how {partner} would rank these ice cream flavors, favorite first.'
+	},
+	{
+		id: 'r1-countries',
+		kind: 'number',
+		time: 20,
+		min: 0,
+		max: 20,
+		self: 'How many countries have you visited?',
+		other: 'How many countries has {partner} visited?'
+	},
+	{
+		id: 'r1-spice',
+		kind: 'likert',
+		time: 20,
+		steps: 5,
+		left: 'mild',
+		right: 'extra spicy',
+		self: 'How much spice can you handle?',
+		other: 'How much spice can {partner} handle?'
 	}
 ];
 
@@ -223,6 +246,34 @@ const dusk: Question[] = [
 		right: 'night owl',
 		self: 'Are you an early bird or a night owl?',
 		other: 'Is {partner} an early bird or a night owl?'
+	},
+	{
+		id: 'r2-pizza',
+		kind: 'select',
+		time: 30,
+		pick: 2,
+		options: [
+			{ id: 'pepperoni', label: 'pepperoni' },
+			{ id: 'mushroom', label: 'mushroom' },
+			{ id: 'pineapple', label: 'pineapple' },
+			{ id: 'olives', label: 'olives' },
+			{ id: 'jalapeno', label: 'jalapeños' }
+		],
+		self: 'Pick the 2 pizza toppings you’d never skip.',
+		other: 'Which 2 pizza toppings would {partner} never skip?'
+	},
+	{
+		id: 'r2-morning',
+		kind: 'rank',
+		time: 35,
+		items: [
+			{ id: 'coffee', label: 'coffee' },
+			{ id: 'snooze', label: 'five more minutes' },
+			{ id: 'shower', label: 'a hot shower' },
+			{ id: 'breakfast', label: 'breakfast' }
+		],
+		self: 'Rank these morning essentials from most to least important to you.',
+		other: 'Guess how {partner} would rank these morning essentials, most important first.'
 	}
 ];
 
@@ -238,40 +289,6 @@ const midnight: Question[] = [
 		options: MBTI,
 		self: 'What’s your MBTI type?',
 		other: 'What’s {partner}’s MBTI type? (matching letters count!)'
-	},
-	{
-		id: 'r3-vibes',
-		kind: 'guessScore',
-		time: 40,
-		min: 3,
-		max: 15,
-		unit: 'points',
-		quiz: [
-			{
-				q: 'I’d rather stay in than go out.',
-				type: 'likert',
-				steps: 5,
-				left: 'not at all',
-				right: 'absolutely'
-			},
-			{
-				q: 'I plan things well in advance.',
-				type: 'likert',
-				steps: 5,
-				left: 'not at all',
-				right: 'absolutely'
-			},
-			{
-				q: 'I’m the one who brings the snacks.',
-				type: 'likert',
-				steps: 5,
-				left: 'not at all',
-				right: 'absolutely'
-			}
-		],
-		self: 'Rate how much each statement sounds like you (1–5).',
-		other:
-			'{partner} rated three statements from 1 to 5 each. How many points (out of 15) do you think they earned in total?'
 	},
 	{
 		id: 'r3-island',
@@ -301,8 +318,44 @@ const midnight: Question[] = [
 		],
 		self: 'Rank these weekend plans from most to least appealing to you.',
 		other: 'Guess how {partner} would rank these weekend plans, most appealing first.'
+	},
+	{
+		id: 'r3-plans',
+		kind: 'likert',
+		time: 20,
+		steps: 7,
+		left: 'wing it',
+		right: 'color-coded spreadsheet',
+		self: 'How do you approach a trip?',
+		other: 'How does {partner} approach a trip?'
+	},
+	{
+		id: 'r3-apps',
+		kind: 'number',
+		time: 20,
+		min: 0,
+		max: 100,
+		self: 'How many apps are on your phone’s home screens, roughly?',
+		other: 'How many apps are on {partner}’s home screens, roughly?'
 	}
 ];
 
-/** One array of questions per round: [sunset, dusk, midnight] */
-export const rounds: Question[][] = [sunset, dusk, midnight];
+/** One pool of questions per round: [sunset, dusk, midnight]. Pools can be any length. */
+export const questionBank: Question[][] = [sunset, dusk, midnight];
+
+export const ROUND_COUNT = questionBank.length;
+/**
+ * Questions asked per round. Keep it even: each player answers half about themself and half
+ * about their partner, alternating.
+ */
+export const QUESTIONS_PER_ROUND = 4;
+
+/** Random sample of `count` distinct questions from a pool (all of them if the pool is smaller). */
+export function pickQuestions(pool: Question[], count: number): Question[] {
+	const a = [...pool];
+	for (let i = a.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[a[i], a[j]] = [a[j], a[i]];
+	}
+	return a.slice(0, count);
+}

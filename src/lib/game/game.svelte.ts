@@ -1,4 +1,12 @@
-import { promptText, rounds, type Answer, type Question } from '#lib/data/questions.ts';
+import {
+	QUESTIONS_PER_ROUND,
+	ROUND_COUNT,
+	pickQuestions,
+	promptText,
+	questionBank,
+	type Answer,
+	type Question
+} from '#lib/data/questions.ts';
 import {
 	TIER_COPY,
 	TIER_POINTS,
@@ -48,6 +56,8 @@ export class Game {
 	lastPair = $state<Pair | null>(null);
 	/** whether the player who just answered (turn 2) was the guesser or the subject */
 	lastWasGuesser = $state(true);
+	/** this game's questions: QUESTIONS_PER_ROUND random picks from each round's pool */
+	private picked: Question[][] = [];
 	private answers: { [qid: string]: Rec } = {};
 
 	// ---- derived -------------------------------------------------------------------------
@@ -61,7 +71,7 @@ export class Game {
 		this.currentTask ? this.lookup(this.currentTask.qid) : undefined
 	);
 	score = $derived(this.pairs.reduce((s, p) => s + p.points, 0));
-	maxScore = rounds.flat().length * TIER_POINTS.exact;
+	maxScore = ROUND_COUNT * QUESTIONS_PER_ROUND * TIER_POINTS.exact;
 	pandaState = $derived<PandaState>(
 		this.temp >= 80
 			? 'relaxed'
@@ -122,12 +132,12 @@ export class Game {
 	}
 
 	private lookup(qid: string): Question | undefined {
-		return rounds[this.round].find((q) => q.id === qid);
+		return this.picked[this.round]?.find((q) => q.id === qid);
 	}
 
 	/** Turn 1: alternates self / guess. Turn 2: the complementary tasks, in random order. */
 	private buildTasks(): Task[] {
-		const qs = rounds[this.round];
+		const qs = this.picked[this.round];
 		const first: Task[] = qs.map((q, i) => ({ qid: q.id, mode: i % 2 === 0 ? 'self' : 'guess' }));
 		if (this.turn === 0) return first;
 		return shuffle(first.map((t): Task => ({ ...t, mode: t.mode === 'self' ? 'guess' : 'self' })));
@@ -146,6 +156,7 @@ export class Game {
 		this.pairs = [];
 		this.lastPair = null;
 		this.answers = {};
+		this.picked = questionBank.map((pool) => pickQuestions(pool, QUESTIONS_PER_ROUND));
 		this.temp = 70;
 		this.round = 0;
 		this.turn = 0;

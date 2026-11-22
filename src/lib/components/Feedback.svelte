@@ -75,7 +75,7 @@
 		gap: 0.5rem;
 		padding: 1rem;
 		text-align: center;
-		color: var(--snow);
+		color: #fff;
 		pointer-events: none;
 		animation: popup var(--ms) cubic-bezier(0.2, 1.3, 0.4, 1) forwards;
 	}
