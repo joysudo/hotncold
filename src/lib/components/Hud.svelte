@@ -11,7 +11,7 @@
 
 <div class="hud">
 	<div class="row">
-		<span class="score">score <b>{score}</b></span>
+		<span class="score">Score <b>{score}</b></span>
 		<span class="zone">{zone}</span>
 		<span class="state">{pandaState}</span>
 	</div>
@@ -50,9 +50,9 @@
 	.zone {
 		font-family: var(--font-heading);
 		font-size: 1.5rem;
-		text-transform: lowercase;
 	}
 	.state {
+		text-transform: capitalize;
 		color: var(--ink-soft);
 		font-style: italic;
 	}
@@ -82,6 +82,7 @@
 		transition: left 0.9s cubic-bezier(0.3, 1.4, 0.5, 1);
 	}
 	.ticks {
+		text-transform: capitalize;
 		display: flex;
 		justify-content: space-between;
 		padding: 0.25rem 0.1rem 0;

@@ -74,7 +74,7 @@
 			<div class="fill" style:width="{(left / total) * 100}%"></div>
 		</div>
 		<div class="meta">
-			<span class="chip">{mode === 'self' ? 'about you' : `about ${game.otherName}`}</span>
+			<span class="chip">{mode === 'self' ? 'About you' : `About ${game.otherName}`}</span>
 			<span class="secs" class:urgent>{Math.ceil(left)}s</span>
 		</div>
 
@@ -103,7 +103,7 @@
 
 		{#if !autoSubmit}
 			<div class="actions">
-				<button class="btn" type="button" disabled={!ready} onclick={submit}>lock it in</button>
+				<button class="btn" type="button" disabled={!ready} onclick={submit}>Lock it in</button>
 			</div>
 		{/if}
 	</section>

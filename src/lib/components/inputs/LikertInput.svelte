@@ -1,14 +1,15 @@
 <script lang="ts">
 	let {
 		steps,
+		min = 1,
 		left,
 		right,
 		value = $bindable()
-	}: { steps: number; left: string; right: string; value: number | null } = $props();
+	}: { steps: number; min?: number; left: string; right: string; value: number | null } = $props();
 </script>
 
 <div class="scale" role="radiogroup">
-	{#each Array.from({ length: steps }, (_, i) => i + 1) as n}
+	{#each Array.from({ length: steps }, (_, i) => i + min) as n}
 		<button
 			type="button"
 			role="radio"

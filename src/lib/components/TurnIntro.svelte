@@ -13,7 +13,7 @@
 
 <Snow mode="around" {leaving} />
 <div class="center">
-	<button class="start" type="button" onclick={press} class:leaving>press to start.</button>
+	<button class="start" type="button" onclick={press} class:leaving>Press to start.</button>
 </div>
 
 <style>

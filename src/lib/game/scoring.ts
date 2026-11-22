@@ -6,10 +6,10 @@ export type Draft = Answer | (number | null)[];
 export const TIERS: Tier[] = ['exact', 'warm', 'cold', 'frozen'];
 /** the "temperature" word shown to players for each tier */
 export const TIER_LABEL: Record<Tier, string> = {
-	exact: 'hot',
-	warm: 'warm',
-	cold: 'cold',
-	frozen: 'frozen'
+	exact: 'Hot',
+	warm: 'Warm',
+	cold: 'Cold',
+	frozen: 'Frozen'
 };
 export const TIER_POINTS: Record<Tier, number> = { exact: 100, warm: 60, cold: 20, frozen: 0 };
 /** how much each tier warms (+) or cools (-) the red panda (0–100 scale) */
@@ -27,10 +27,10 @@ export const TIER_COLOR: Record<Tier, string> = {
  * `{other}` is the other player's name.
  */
 export const TIER_COPY: Record<Tier, [string, string]> = {
-	exact: ['you scored exactly right!', 'exactly what {other} guessed!'],
-	warm: ['you were close…', '{other} guessed close…'],
-	cold: ['brr.', '{other} was off.'],
-	frozen: ['are you sure you know {other}?', 'pull {other} for a chat.']
+	exact: ['You scored exactly right!', 'Exactly what {other} guessed!'],
+	warm: ['You were close…', '{other} guessed close…'],
+	cold: ['Brr.', '{other} was off.'],
+	frozen: ['Are you sure you know {other}?', 'Pull {other} for a chat.']
 };
 
 export function tierOf(c: number): Tier {
@@ -83,6 +83,7 @@ export function closeness(q: Question, truth: Answer, guess: Answer): number {
 		}
 		case 'single': {
 			if (truth === guess) return 1;
+			if (q.metric === 'exact') return 0;
 			if (q.metric === 'letters') {
 				const a = String(truth);
 				const b = String(guess);
@@ -100,11 +101,11 @@ export function closeness(q: Question, truth: Answer, guess: Answer): number {
 
 /** Human-readable version of an answer, used in the feedback + results screens. */
 export function formatAnswer(q: Question, a: Answer): string {
-	if (a == null) return 'no answer';
+	if (a == null) return 'No answer';
 	switch (q.kind) {
 		case 'select': {
 			const label = (id: string) => q.options.find((o) => o.id === id)?.label ?? id;
-			return (a as string[]).map(label).join(', ') || 'no answer';
+			return (a as string[]).map(label).join(', ') || 'No answer';
 		}
 		case 'rank': {
 			const label = (id: string) => q.items.find((o) => o.id === id)?.label ?? id;

@@ -8,26 +8,26 @@
 	const pairs = $derived(game.pairs);
 	const best = $derived(pairs.reduce((a, b) => (b.closeness > a.closeness ? b : a), pairs[0]));
 	const worst = $derived(pairs.reduce((a, b) => (b.closeness < a.closeness ? b : a), pairs[0]));
-	const ZONES = ['sunset', 'dusk', 'midnight'];
+	const ZONES = ['Sunset', 'Dusk', 'Midnight'];
 </script>
 
 <div class="scroll">
 	<div class="content" in:fly={{ y: 500, duration: 900, delay: 300 }}>
 		<section class="panel overview">
-			<h2>the night is over</h2>
+			<h2>The night is over</h2>
 			<p class="big">{game.score}<small> / {game.maxScore}</small></p>
 			<p class="names">{game.name(0)} &amp; {game.name(1)}</p>
 
 			<div class="highlights">
 				<div class="hl" style:--tier={best ? TIER_COLOR[best.tier] : undefined}>
-					<h4>best match</h4>
+					<h4>Best match</h4>
 					{#if best}
 						<p>{best.text}</p>
 						<p class="tag" style:color={TIER_COLOR[best.tier]}>{TIER_LABEL[best.tier]} · {best.actual}</p>
 					{/if}
 				</div>
 				<div class="hl" style:--tier={worst ? TIER_COLOR[worst.tier] : undefined}>
-					<h4>worst miss</h4>
+					<h4>Worst miss</h4>
 					{#if worst}
 						<p>{worst.text}</p>
 						<p class="tag" style:color={TIER_COLOR[worst.tier]}>
@@ -37,7 +37,7 @@
 				</div>
 			</div>
 
-			<h4 class="chart-title">overall performance</h4>
+			<h4 class="chart-title">Overall performance</h4>
 			<div class="chart" role="img" aria-label="closeness of each answer, by round">
 				{#each ZONES as zone, r}
 					<div class="group">
@@ -57,15 +57,15 @@
 			</div>
 
 			<div class="actions">
-				<button class="btn" type="button" onclick={() => game.reset()}>play again</button>
-				<button class="btn ghost" type="button" onclick={() => game.showPast()}>past results</button>
+				<button class="btn" type="button" onclick={() => game.reset()}>Play again</button>
+				<button class="btn ghost" type="button" onclick={() => game.showPast()}>Past results</button>
 			</div>
 		</section>
 
 		<section class="panel detail">
 			<div class="cols head">
-				<h3>actual answer</h3>
-				<h3>anticipated answer</h3>
+				<h3>Actual answer</h3>
+				<h3>Anticipated answer</h3>
 			</div>
 			{#each pairs as p (p.qid)}
 				<p class="qtext">{p.text}</p>

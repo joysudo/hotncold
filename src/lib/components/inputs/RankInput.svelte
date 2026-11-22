@@ -17,7 +17,7 @@
 	}
 </script>
 
-<p class="hint">drag to reorder — top is highest priority</p>
+<p class="hint">Drag to reorder — top is highest priority</p>
 <ol>
 	{#each value as id, i (id)}
 		<li

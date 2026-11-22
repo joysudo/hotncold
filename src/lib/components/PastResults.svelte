@@ -21,9 +21,9 @@
 
 <div class="wrap">
 	<section class="panel">
-		<h2>past results</h2>
+		<h2>Past results</h2>
 		{#if results.length === 0}
-			<p class="empty">no nights recorded yet — go enter one.</p>
+			<p class="empty">No nights recorded yet — go enter one.</p>
 		{:else}
 			<ul>
 				{#each results as r (r.id)}
@@ -44,9 +44,9 @@
 			</ul>
 		{/if}
 		<div class="actions">
-			<button class="btn" type="button" onclick={() => game.showStart()}>back</button>
+			<button class="btn" type="button" onclick={() => game.showStart()}>Back</button>
 			{#if results.length}
-				<button class="btn ghost" type="button" onclick={clear}>clear history</button>
+				<button class="btn ghost" type="button" onclick={clear}>Clear history</button>
 			{/if}
 		</div>
 	</section>

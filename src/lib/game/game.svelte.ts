@@ -30,7 +30,7 @@ export type Phase =
 export type Mode = 'self' | 'guess';
 export type Task = { qid: string; mode: Mode };
 
-export const ZONES = ['sunset', 'dusk', 'midnight'] as const;
+export const ZONES = ['Sunset', 'Dusk', 'Midnight'] as const;
 export const PANDA_STATES = ['relaxed', 'content', 'cool', 'chilly', 'frozen'] as const;
 export type PandaState = (typeof PANDA_STATES)[number];
 
@@ -113,7 +113,7 @@ export class Game {
 	/** small line above the name on a player's sign */
 	signSub = $derived(
 		this.phase === 'turnIntro' || this.phase === 'question' || this.phase === 'feedback'
-			? `Round ${this.round + 1} · ${this.zone}`
+			? `Round ${this.round + 1} – ${this.zone}`
 			: ''
 	);
 	signText = $derived(
@@ -122,13 +122,14 @@ export class Game {
 			: this.phase === 'roundResults'
 				? `Round ${this.round + 1} results`
 				: this.phase === 'end'
-					? 'the night is over'
+					? 'The night is over'
 					: ''
 	);
 
 	// ---- helpers -------------------------------------------------------------------------
 	name(i: number) {
-		return this.names[i].trim() || `Player ${i + 1}`;
+		const n = this.names[i].trim();
+		return n ? n.charAt(0).toUpperCase() + n.slice(1) : `Player ${i + 1}`;
 	}
 
 	private lookup(qid: string): Question | undefined {

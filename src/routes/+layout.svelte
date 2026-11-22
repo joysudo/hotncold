@@ -8,7 +8,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>hot &amp; cold</title>
+	<title>Hot &amp; Cold</title>
 </svelte:head>
 
 {@render children()}

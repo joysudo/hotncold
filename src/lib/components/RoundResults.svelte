@@ -14,7 +14,7 @@
 <div class="wrap">
 	<section class="panel" in:fly={{ y: 600, duration: 1100, delay: 350 }}>
 		<h2>{game.zone}</h2>
-		<p class="total">round score <b>{roundScore}</b> <small>/ {game.roundPairs.length * 100}</small></p>
+		<p class="total">Round score <b>{roundScore}</b> <small>/ {game.roundPairs.length * 100}</small></p>
 		<ul>
 			{#each game.roundPairs as p (p.qid)}
 				<li style:--tier={TIER_COLOR[p.tier]}>
@@ -25,7 +25,7 @@
 			{/each}
 		</ul>
 		<button class="btn" type="button" onclick={() => game.afterRoundResults()}>
-			{last ? 'see the final results' : 'on to the next stage'}
+			{last ? 'See the final results' : 'On to the next stage'}
 		</button>
 	</section>
 </div>

@@ -34,11 +34,18 @@ export type RankQ = Base & { kind: 'rank'; items: Option[] };
 
 export type QuizItem = { q: string } & (
 	| { type: 'number'; answer: number }
-	| { type: 'likert'; steps: number; left: string; right: string }
+	| {
+			type: 'likert';
+			steps: number;
+			/** first value on the scale (default 1), e.g. 0 for a 0–4 scale */
+			min?: number;
+			left: string;
+			right: string;
+	  }
 );
 /**
  * Guess the score: the subject completes a mini quiz; the partner estimates the resulting
- * score. Number items score 1 when correct; likert items score the value picked (1..steps).
+ * score. Number items score 1 when correct; likert items score the value picked (min..min+steps-1).
  */
 export type GuessScoreQ = Base & {
 	kind: 'guessScore';
@@ -47,10 +54,13 @@ export type GuessScoreQ = Base & {
 	unit: string;
 	quiz: QuizItem[];
 };
-/** Guess the single answer, judged by proximity (circular order) or matching letters. */
+/**
+ * Guess the single answer. `metric` decides closeness: 'circular' = distance around the option
+ * list, 'letters' = matching letters, 'exact' = right or wrong.
+ */
 export type SingleQ = Base & {
 	kind: 'single';
-	metric: 'circular' | 'letters';
+	metric: 'circular' | 'letters' | 'exact';
 	options: Option[];
 };
 
@@ -70,59 +80,59 @@ export function promptText(q: Question, mode: 'self' | 'guess', partnerName: str
 const SNACKS: Option[] = [
 	{
 		id: 'peach-rings',
-		label: 'peach rings',
+		label: 'Peach rings',
 		image:
 			'https://images.contentstack.io/v3/assets/bltbb619fd5c667ba2d/blt771535f1a27cbf00/60ad78de77e996669f49f5d5/7-Select_Gummi_Peach_Rings_1800X1800_transparent.png'
 	},
 	{
 		id: 'snack-2',
-		label: 'snack 2',
+		label: 'Snack 2',
 		image:
 			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY3t609X-7ymMxPDWx_mqrf55zsTj38cVMsu1Y0gF_SA&s=10'
 	},
 	{
 		id: 'snack-3',
-		label: 'snack 3',
+		label: 'Snack 3',
 		image: 'https://www.kroger.com/product/images/xlarge/front/0001708287631'
 	},
 	{
 		id: 'banana',
-		label: 'banana',
+		label: 'Banana',
 		image:
 			'https://upload.wikimedia.org/wikipedia/commons/6/69/Banana.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original'
 	},
 	{
 		id: 'snack-5',
-		label: 'snack 5',
+		label: 'Snack 5',
 		image: 'https://www.cvs.com/bizcontent/merchandising/productimages/high_res/4141942007.jpg'
 	},
 	{
 		id: 'snack-6',
-		label: 'snack 6',
+		label: 'Snack 6',
 		image:
 			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjsDzzIm3GS8HJgsdOjtKa6Dqz5M4m8OLZIgpezQM8cQ&s=10'
 	},
 	{
 		id: 'snack-7',
-		label: 'snack 7',
+		label: 'Snack 7',
 		image:
 			'https://poppin-candy.com/cdn/shop/files/PHOTOROOM1080X1080TRANSPARENT-PhotoRoom-2024-01-25T105201.199.png?v=1706179926&width=1200'
 	}
 ];
 
 const STAR_SIGNS: Option[] = [
-	['aries', '♈ aries'],
-	['taurus', '♉ taurus'],
-	['gemini', '♊ gemini'],
-	['cancer', '♋ cancer'],
-	['leo', '♌ leo'],
-	['virgo', '♍ virgo'],
-	['libra', '♎ libra'],
-	['scorpio', '♏ scorpio'],
-	['sagittarius', '♐ sagittarius'],
-	['capricorn', '♑ capricorn'],
-	['aquarius', '♒ aquarius'],
-	['pisces', '♓ pisces']
+	['aries', '♈ Aries'],
+	['taurus', '♉ Taurus'],
+	['gemini', '♊ Gemini'],
+	['cancer', '♋ Cancer'],
+	['leo', '♌ Leo'],
+	['virgo', '♍ Virgo'],
+	['libra', '♎ Libra'],
+	['scorpio', '♏ Scorpio'],
+	['sagittarius', '♐ Sagittarius'],
+	['capricorn', '♑ Capricorn'],
+	['aquarius', '♒ Aquarius'],
+	['pisces', '♓ Pisces']
 ].map(([id, label]) => ({ id, label }));
 
 const MBTI: Option[] = [
@@ -146,37 +156,14 @@ const sunset: Question[] = [
 		other: 'Quick! You’ve got 10 minutes at a gas station. Which 2 snacks is {partner} picking?'
 	},
 	{
-		id: 'r1-siblings',
-		kind: 'number',
-		time: 20,
-		min: 0,
-		max: 10,
-		self: 'How many siblings do you have?',
-		other: 'How many siblings does {partner} have?'
-	},
-	{
 		id: 'r1-eggs',
 		kind: 'likert',
 		time: 20,
 		steps: 7,
-		left: 'overcooked',
-		right: 'borderline raw',
+		left: 'Overcooked',
+		right: 'Borderline raw',
 		self: 'How do you like your eggs?',
 		other: 'How does {partner} like their eggs?'
-	},
-	{
-		id: 'r1-icecream',
-		kind: 'rank',
-		time: 40,
-		items: [
-			{ id: 'vanilla', label: 'vanilla' },
-			{ id: 'chocolate', label: 'chocolate' },
-			{ id: 'mint', label: 'mint chocolate chip' },
-			{ id: 'pecan', label: 'butter pecan' },
-			{ id: 'mango', label: 'mango sorbet' }
-		],
-		self: 'Rank these ice cream flavors from your favorite to your least favorite.',
-		other: 'Guess how {partner} would rank these ice cream flavors, favorite first.'
 	},
 	{
 		id: 'r1-countries',
@@ -192,10 +179,87 @@ const sunset: Question[] = [
 		kind: 'likert',
 		time: 20,
 		steps: 5,
-		left: 'mild',
-		right: 'extra spicy',
+		left: 'Mild',
+		right: 'Extra spicy',
 		self: 'How much spice can you handle?',
 		other: 'How much spice can {partner} handle?'
+	},
+	{
+		id: 'r1-olives',
+		kind: 'likert',
+		time: 20,
+		steps: 5,
+		left: 'Gross',
+		right: 'Love them',
+		self: 'How do you feel about olives?',
+		other: 'How do you think {partner} feels about olives?'
+	},
+	{
+		id: 'r1-smiski',
+		kind: 'likert',
+		time: 20,
+		steps: 5,
+		left: 'No chance',
+		right: 'Already shopping',
+		self: 'How likely are you to ever spend your own money on a Smiski?',
+		other: 'How likely is {partner} to ever spend their own money on a Smiski?'
+	},
+	{
+		id: 'r1-hackathons',
+		kind: 'number',
+		time: 20,
+		min: 0,
+		max: 10,
+		self: 'How many hackathons have you been to?',
+		other: 'How many hackathons has {partner} been to?'
+	},
+	{
+		id: 'r1-holiday',
+		kind: 'single',
+		metric: 'exact',
+		time: 25,
+		options: [
+			{ id: 'new-year', label: 'New Year’s' },
+			{ id: 'lunar-new-year', label: 'Lunar New Year' },
+			{ id: 'valentines', label: 'Valentine’s Day' },
+			{ id: 'fourth-of-july', label: 'Fourth of July' },
+			{ id: 'halloween', label: 'Halloween' },
+			{ id: 'thanksgiving', label: 'Thanksgiving' },
+			{ id: 'christmas', label: 'Christmas' }
+		],
+		self: 'Select your favorite holiday.',
+		other: 'Select {partner}’s favorite holiday.'
+	},
+	{
+		id: 'r1-clean',
+		kind: 'likert',
+		time: 20,
+		steps: 10,
+		left: 'Total slob',
+		right: 'Clean freak',
+		self: 'On a scale of 1 to 10, how much would you describe yourself as a clean freak?',
+		other: 'On a scale of 1 to 10, how much would {partner} describe themselves as a clean freak?'
+	},
+	{
+		id: 'r1-heidi-orpheus',
+		kind: 'single',
+		metric: 'exact',
+		time: 15,
+		options: [
+			{ id: 'heidi', label: 'Heidi' },
+			{ id: 'orpheus', label: 'Orpheus' }
+		],
+		self: 'Heidi or Orpheus?',
+		other: 'Heidi or Orpheus? Which would {partner} pick?'
+	},
+	{
+		id: 'r1-age',
+		kind: 'number',
+		time: 20,
+		min: 18,
+		max: 40,
+		self: 'How old are you?',
+		other: 'How old is {partner}?'
 	}
 ];
 
@@ -213,22 +277,6 @@ const dusk: Question[] = [
 		other: 'What’s {partner}’s star sign? (closer on the calendar counts!)'
 	},
 	{
-		id: 'r2-mult',
-		kind: 'guessScore',
-		time: 35,
-		min: 0,
-		max: 3,
-		unit: 'correct',
-		quiz: [
-			{ q: '7 × 8', type: 'number', answer: 56 },
-			{ q: '6 × 9', type: 'number', answer: 54 },
-			{ q: '12 × 4', type: 'number', answer: 48 }
-		],
-		self: 'Answer these three multiplication questions as fast as you can.',
-		other:
-			'{partner} was just asked three multiplication questions. How many do you think they got correct?'
-	},
-	{
 		id: 'r2-sleep',
 		kind: 'number',
 		time: 20,
@@ -242,8 +290,8 @@ const dusk: Question[] = [
 		kind: 'likert',
 		time: 20,
 		steps: 5,
-		left: 'early bird',
-		right: 'night owl',
+		left: 'Early bird',
+		right: 'Night owl',
 		self: 'Are you an early bird or a night owl?',
 		other: 'Is {partner} an early bird or a night owl?'
 	},
@@ -253,11 +301,11 @@ const dusk: Question[] = [
 		time: 30,
 		pick: 2,
 		options: [
-			{ id: 'pepperoni', label: 'pepperoni' },
-			{ id: 'mushroom', label: 'mushroom' },
-			{ id: 'pineapple', label: 'pineapple' },
-			{ id: 'olives', label: 'olives' },
-			{ id: 'jalapeno', label: 'jalapeños' }
+			{ id: 'pepperoni', label: 'Pepperoni' },
+			{ id: 'mushroom', label: 'Mushroom' },
+			{ id: 'pineapple', label: 'Pineapple' },
+			{ id: 'olives', label: 'Olives' },
+			{ id: 'jalapeno', label: 'Jalapeños' }
 		],
 		self: 'Pick the 2 pizza toppings you’d never skip.',
 		other: 'Which 2 pizza toppings would {partner} never skip?'
@@ -267,13 +315,87 @@ const dusk: Question[] = [
 		kind: 'rank',
 		time: 35,
 		items: [
-			{ id: 'coffee', label: 'coffee' },
-			{ id: 'snooze', label: 'five more minutes' },
-			{ id: 'shower', label: 'a hot shower' },
-			{ id: 'breakfast', label: 'breakfast' }
+			{ id: 'coffee', label: 'Coffee' },
+			{ id: 'snooze', label: 'Five more minutes' },
+			{ id: 'shower', label: 'A hot shower' },
+			{ id: 'breakfast', label: 'Breakfast' }
 		],
 		self: 'Rank these morning essentials from most to least important to you.',
 		other: 'Guess how {partner} would rank these morning essentials, most important first.'
+	},
+	{
+		id: 'r2-siblings',
+		kind: 'number',
+		time: 20,
+		min: 0,
+		max: 10,
+		self: 'How many siblings do you have?',
+		other: 'How many siblings does {partner} have?'
+	},
+	{
+		id: 'r2-icecream',
+		kind: 'rank',
+		time: 30,
+		items: [
+			{ id: 'vanilla', label: 'Vanilla' },
+			{ id: 'mint', label: 'Mint chocolate chip' },
+			{ id: 'mango', label: 'Mango sorbet' }
+		],
+		self: 'Rank these three ice cream flavors from your favorite to your least favorite.',
+		other: 'Rank these three ice cream flavors the way you think {partner} would, favorite first.'
+	},
+	{
+		id: 'r2-island',
+		kind: 'select',
+		time: 35,
+		pick: 3,
+		options: [
+			{ id: 'radio', label: 'Solar radio' },
+			{ id: 'books', label: 'Stack of books' },
+			{ id: 'knife', label: 'Good knife' },
+			{ id: 'snacks', label: 'Snack drawer' },
+			{ id: 'vinyl', label: 'Vinyl player' },
+			{ id: 'snowglobe', label: 'Magical snowglobe' },
+			{ id: 'coffee', label: 'Coffee maker' }
+		],
+		self: 'Pick 3 of these to bring to a deserted island.',
+		other: 'Pick the 3 of these you think {partner} would bring to a deserted island.'
+	},
+	{
+		id: 'r2-staff',
+		kind: 'single',
+		metric: 'exact',
+		time: 30,
+		options: [
+			'Aariana', 'Jenny', 'Lola', 'Cinders', 'Darlene', 'Alex', 'Cisco',
+			'Julia', 'Meghana', 'Mihi', 'Nika', 'Selena', 'Tongyu', 'Joy'
+		].map((n) => ({ id: n.toLowerCase(), label: n })),
+		self: 'Select your favorite Snowglobe staff member.',
+		other: 'Select {partner}’s favorite Snowglobe staff member.'
+	},
+	{
+		id: 'r2-city',
+		kind: 'single',
+		metric: 'exact',
+		time: 25,
+		options: [
+			{ id: 'sf', label: 'San Francisco' },
+			{ id: 'nyc', label: 'New York' },
+			{ id: 'la', label: 'Los Angeles' },
+			{ id: 'chicago', label: 'Chicago' }
+		],
+		self: 'Which city would you choose to live in forever?',
+		other: 'Which city would {partner} choose to live in forever?'
+	},
+	{
+		id: 'r2-catsdogs',
+		kind: 'likert',
+		time: 20,
+		steps: 5,
+		left: 'Cats',
+		right: 'Dogs',
+		self: 'Do you prefer cats or dogs?',
+		other: 'Does {partner} prefer cats or dogs?'
 	}
 ];
 
@@ -291,30 +413,14 @@ const midnight: Question[] = [
 		other: 'What’s {partner}’s MBTI type? (matching letters count!)'
 	},
 	{
-		id: 'r3-island',
-		kind: 'select',
-		time: 30,
-		pick: 3,
-		options: [
-			{ id: 'knife', label: 'a good knife' },
-			{ id: 'books', label: 'a stack of books' },
-			{ id: 'guitar', label: 'a guitar' },
-			{ id: 'hammock', label: 'a hammock' },
-			{ id: 'cooler', label: 'a cooler of snacks' },
-			{ id: 'radio', label: 'a solar radio' }
-		],
-		self: 'You’re stranded on a desert island. Which 3 items do you bring?',
-		other: '{partner} is stranded on a desert island. Which 3 items do they bring?'
-	},
-	{
 		id: 'r3-weekend',
 		kind: 'rank',
 		time: 35,
 		items: [
-			{ id: 'hike', label: 'a long hike' },
-			{ id: 'movies', label: 'a movie marathon' },
-			{ id: 'brunch', label: 'a big brunch out' },
-			{ id: 'nap', label: 'a really good nap' }
+			{ id: 'hike', label: 'A long hike' },
+			{ id: 'movies', label: 'A movie marathon' },
+			{ id: 'brunch', label: 'A big brunch out' },
+			{ id: 'nap', label: 'A really good nap' }
 		],
 		self: 'Rank these weekend plans from most to least appealing to you.',
 		other: 'Guess how {partner} would rank these weekend plans, most appealing first.'
@@ -324,8 +430,8 @@ const midnight: Question[] = [
 		kind: 'likert',
 		time: 20,
 		steps: 7,
-		left: 'wing it',
-		right: 'color-coded spreadsheet',
+		left: 'Wing it',
+		right: 'Color-coded spreadsheet',
 		self: 'How do you approach a trip?',
 		other: 'How does {partner} approach a trip?'
 	},
@@ -337,6 +443,58 @@ const midnight: Question[] = [
 		max: 100,
 		self: 'How many apps are on your phone’s home screens, roughly?',
 		other: 'How many apps are on {partner}’s home screens, roughly?'
+	},
+	{
+		id: 'r3-mult',
+		kind: 'guessScore',
+		time: 35,
+		min: 0,
+		max: 3,
+		unit: 'correct',
+		quiz: [
+			{ q: '4 × 7', type: 'number', answer: 28 },
+			{ q: '9 × 12', type: 'number', answer: 108 },
+			{ q: '6 × 8', type: 'number', answer: 48 }
+		],
+		self: 'Answer the following three multiplication questions as fast as possible.',
+		other:
+			'{partner} was presented with three 3rd-grade multiplication questions. How many of these do you think they got right?'
+	},
+	{
+		id: 'r3-ocd',
+		kind: 'guessScore',
+		time: 45,
+		min: 0,
+		max: 16,
+		unit: 'points',
+		quiz: [
+			'I find it difficult to touch an object when I know it has been touched by strangers or certain people.',
+			'I collect things I don’t need.',
+			'I repeatedly check gas and water taps and light switches.',
+			'I get upset if objects are not arranged properly.'
+		].map((q) => ({
+			q,
+			type: 'likert' as const,
+			steps: 5,
+			min: 0,
+			left: 'Not at all',
+			right: 'Extremely'
+		})),
+		self: 'Select how well each experience describes you. 0 = Not at all, 1 = A little, 2 = Moderately, 3 = A lot, 4 = Extremely.',
+		other:
+			'{partner} was presented with four OCD assessment questions. How many points do you think they scored, out of 16?'
+	},
+	{
+		id: 'r3-crystal-ball',
+		kind: 'single',
+		metric: 'exact',
+		time: 20,
+		options: [
+			{ id: 'yes', label: 'Yes, I’d look' },
+			{ id: 'no', label: 'No, never' }
+		],
+		self: 'If a crystal ball could tell you how you’d die, would you look in it?',
+		other: 'If a crystal ball could tell {partner} how they’d die, would they look in it?'
 	}
 ];
 

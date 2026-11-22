@@ -46,7 +46,6 @@
 		margin: 0;
 		font-size: clamp(0.8rem, 2.2vw, 1rem);
 		letter-spacing: 0.06em;
-		text-transform: lowercase;
 		color: var(--ink);
 	}
 	h2 {

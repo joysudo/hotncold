@@ -30,10 +30,10 @@
 
 <div class="popup" style:--ms="{SHOW_MS}ms" role="status" aria-live="polite">
 	<h2 class="tier">{TIER_LABEL[pair.tier]}</h2>
-	<p class="points">{pair.points > 0 ? `+${pair.points}` : 'no points'}</p>
+	<p class="points">{pair.points > 0 ? `+${pair.points}` : 'No points'}</p>
 	<p class="line">{heading}</p>
 	<div class="answers">
-		<p><span>correct answer</span> {pair.actual}</p>
+		<p><span>Correct answer</span> {pair.actual}</p>
 		<p class="guess"><span>{guesserName}’s guess</span> {pair.anticipated}</p>
 	</div>
 </div>
@@ -102,7 +102,6 @@
 	}
 	.tier {
 		font-size: clamp(4rem, 17vw, 9rem);
-		text-transform: lowercase;
 	}
 	.points {
 		margin: 0;

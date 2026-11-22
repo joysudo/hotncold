@@ -24,35 +24,35 @@
 
 <div class="wrap">
 	<form class="panel" onsubmit={enter}>
-		<h1>hot <small>&amp;</small> <span class="cold">cold</span></h1>
-		<p class="tag">how well do you really know each other?</p>
+		<h1>Hot <small>&amp;</small> <span class="cold">Cold</span></h1>
+		<p class="tag">How well do you really know each other?</p>
 
 		<div class="names">
 			<label>
-				<span>partner one</span>
+				<span>Partner one</span>
 				<input
 					bind:value={a}
 					maxlength="20"
-					placeholder="Player 1"
+					placeholder="your name..."
 					autocomplete="off"
 					onkeydown={nextField}
 				/>
 			</label>
 			<label>
-				<span>partner two</span>
+				<span>Partner two</span>
 				<input
 					bind:this={second}
 					bind:value={b}
 					maxlength="20"
-					placeholder="Player 2"
+					placeholder="their name..."
 					autocomplete="off"
 				/>
 			</label>
 		</div>
 
 		<div class="actions">
-			<button class="btn" type="submit">enter the night</button>
-			<button class="btn ghost" type="button" onclick={() => game.showPast()}>past results</button>
+			<button class="btn" type="submit">Enter the night</button>
+			<button class="btn ghost" type="button" onclick={() => game.showPast()}>Past results</button>
 		</div>
 	</form>
 </div>

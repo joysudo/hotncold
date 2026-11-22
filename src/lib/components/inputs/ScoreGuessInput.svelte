@@ -58,6 +58,7 @@
 				{:else}
 					<LikertInput
 						steps={item.steps}
+						min={item.min}
 						left={item.left}
 						right={item.right}
 						bind:value={() => answers[i], (v) => set(i, v)}
