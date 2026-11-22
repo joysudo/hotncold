@@ -1,3 +1,24 @@
+
+# Snowbody Knows
+
+Snowbody Knows is a two-player local co-op game where you keep your pet red panda warm by answering questions about each other’s preferences.
+Your cute little red panda is out in the snowy mountains. It is getting dark. Play for 3 rounds, answering questions about your partner’s favourite ice cream flavour, favourite snowglobe organiser and maybe even where they are on the spectrum. The better you know each other, the warmer your red panda will be throughout the night. Don’t know each other? He might freeze by the time it's dawn. 
+Compete with other teams on the leaderboard to find out who did the best job at keeping their red panda warm and cozy throughout the night!
+
+<img width="959" height="472" alt="image" src="https://github.com/user-attachments/assets/063fa5a6-7a82-4019-a310-c932a8b771a3" />
+
+
+### Live Demo Link: https://hotncold-eight.vercel.app/
+
+### Repository: https://github.com/joysudo/hotncold
+
+## Built By: 
+Joy Su @joysudo and Neha Arya @shrimp-18 <33
+
+## Technical Stack Used:
+
+Svelte Kit and Vanilla CSS. Leaderboard that records the best runs using Firebase Firestore. All assets are custom hand-drawn! 
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
