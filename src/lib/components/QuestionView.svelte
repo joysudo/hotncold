@@ -52,7 +52,14 @@
 	// Questions answered with taps submit themselves as soon as the answer is complete
 	// (likert / single answer on click, select once all X are picked). A short pause lets the
 	// player see their selection register. Free response submits on Enter instead.
-	const autoSubmit = q.kind === 'likert' || q.kind === 'single' || q.kind === 'select';
+	// A rating quiz (all likert items) submits once every statement has an answer; typed quizzes
+	// (e.g. multiplication) still use Enter / the button, since a multi-digit answer can't be
+	// told apart from a half-typed one.
+	const autoSubmit =
+		q.kind === 'likert' ||
+		q.kind === 'single' ||
+		q.kind === 'select' ||
+		(q.kind === 'guessScore' && mode === 'self' && q.quiz.every((i) => i.type === 'likert'));
 	$effect(() => {
 		if (!autoSubmit || !ready) return;
 		const id = setTimeout(submit, 350);
@@ -118,7 +125,7 @@
 	.question {
 		pointer-events: auto;
 		width: min(100%, 680px);
-		color: #fff;
+		color: var(--snow);
 		--ink-soft: rgba(255, 255, 255, 0.85);
 		animation: pop 0.45s cubic-bezier(0.2, 1.3, 0.4, 1);
 	}
@@ -137,11 +144,11 @@
 	.fill {
 		height: 100%;
 		border-radius: 999px;
-		background: linear-gradient(90deg, var(--warm), var(--hot));
-		transition: width 0.1s linear;
+		background: linear-gradient(90deg, var(--warm), var(--warm));
+		transition: width 0.1s linear, background 0.4s ease;
 	}
 	.timer.urgent .fill {
-		background: var(--cold);
+		background: var(--hot);
 	}
 	.meta {
 		display: flex;

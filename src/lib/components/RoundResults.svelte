@@ -10,14 +10,14 @@
 	const last = $derived(game.round === 2);
 </script>
 
-<Snow mode="up" />
+<Snow mode="fall" />
 <div class="wrap">
 	<section class="panel" in:fly={{ y: 600, duration: 1100, delay: 350 }}>
 		<h2>{game.zone}</h2>
 		<p class="total">round score <b>{roundScore}</b> <small>/ {game.roundPairs.length * 100}</small></p>
 		<ul>
 			{#each game.roundPairs as p (p.qid)}
-				<li>
+				<li style:--tier={TIER_COLOR[p.tier]}>
 					<span class="dot" style:background={TIER_COLOR[p.tier]}></span>
 					<span class="text">{p.text}</span>
 					<span class="tier" style:color={TIER_COLOR[p.tier]}>{TIER_LABEL[p.tier]}</span>
@@ -74,7 +74,7 @@
 		display: flex;
 		align-items: center;
 		gap: 0.6rem;
-		background: var(--panel-dim);
+		background: color-mix(in srgb, var(--tier, var(--chilly)) 11%, white);
 		border-radius: var(--blob-a);
 		padding: 0.45rem 0.9rem;
 	}
@@ -91,6 +91,5 @@
 	.tier {
 		font-family: var(--font-heading);
 		font-size: 1.2rem;
-		filter: brightness(0.8);
 	}
 </style>

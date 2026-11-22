@@ -11,7 +11,6 @@
 	}
 </script>
 
-<p class="count">{value.length} of {q.pick} picked</p>
 <div class="grid">
 	{#each q.options as o (o.id)}
 		<button
@@ -35,11 +34,6 @@
 </div>
 
 <style>
-	.count {
-		margin: 0 0 0.6rem;
-		color: var(--ink-soft);
-		text-align: center;
-	}
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
@@ -52,7 +46,7 @@
 		gap: 0.4rem;
 		min-height: 64px;
 		padding: 0.6rem;
-		background: var(--panel-dim);
+		background: var(--card-bg);
 		border-radius: var(--blob-a);
 		font-size: 1rem;
 		transition:

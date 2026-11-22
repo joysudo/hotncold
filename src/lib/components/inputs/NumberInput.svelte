@@ -50,7 +50,7 @@
 		font-size: 3rem;
 		text-align: center;
 		padding: 0.2em 0.3em;
-		background: var(--panel-dim);
+		background: var(--card-bg);
 		border: none;
 		border-radius: var(--blob-a);
 	}

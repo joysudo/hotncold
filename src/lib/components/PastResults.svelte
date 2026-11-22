@@ -84,7 +84,7 @@
 		gap: 0.8rem;
 		justify-content: space-between;
 		flex-wrap: wrap;
-		background: var(--panel-dim);
+		background: color-mix(in srgb, var(--tier, var(--chilly)) 11%, white);
 		border-radius: var(--blob-a);
 		padding: 0.6rem 1rem;
 	}

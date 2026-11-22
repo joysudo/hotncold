@@ -100,6 +100,12 @@ export class Game {
 					? 'end'
 					: ''
 	);
+	/** small line above the name on a player's sign */
+	signSub = $derived(
+		this.phase === 'turnIntro' || this.phase === 'question' || this.phase === 'feedback'
+			? `Round ${this.round + 1} · ${this.zone}`
+			: ''
+	);
 	signText = $derived(
 		this.phase === 'turnIntro' || this.phase === 'question' || this.phase === 'feedback'
 			? this.currentName

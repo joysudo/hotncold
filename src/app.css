@@ -4,17 +4,21 @@
 	--font-body: 'Averia Libre', Georgia, serif;
 	--font-heading: 'Mansalva', 'Averia Libre', cursive;
 
-	--ink: #1c2540;
-	--ink-soft: #4a5578;
-	--snow: #f4f8ff;
-	--panel: rgba(244, 248, 255, 0.93);
-	--panel-dim: rgba(226, 235, 252, 0.9);
+	/* palette */
+	--hot: #9e3514;
+	--warm: #d25931;
+	--lukewarm: #eead97;
+	--chilly: #6e75a9;
+	--frozen: #0b1f62;
+	--ink: #511106; /* dark text, stands in for black */
+	--snow: #ffffff; /* white text, snow */
 
-	--hot: #ff6b3d;
-	--warm: #ffb84d;
-	--cold: #5aa9f5;
-	--frozen: #b9a9ff;
-	--accent: #e8643a;
+	--cold: var(--chilly); /* the "cold" answer tier */
+	--ink-soft: rgba(81, 17, 6, 0.72);
+	--panel: rgba(255, 255, 255, 0.94);
+	--panel-dim: #f9e2db; /* lukewarm tinted toward snow */
+	--accent: var(--warm);
+	--card-bg: rgba(255, 255, 255, 0.75); /* answer cards */
 
 	--blob-a: 34px 46px 38px 52px / 44px 34px 50px 36px;
 	--blob-b: 52px 36px 48px 34px / 36px 50px 34px 46px;
@@ -69,7 +73,7 @@ input:focus-visible {
 /* shared lineless "blob" button */
 .btn {
 	background: var(--accent);
-	color: #fff;
+	color: var(--snow);
 	font-size: 1.15rem;
 	padding: 0.7em 1.6em;
 	border-radius: var(--blob-a);
@@ -86,7 +90,7 @@ input:focus-visible {
 	cursor: not-allowed;
 }
 .btn.ghost {
-	background: rgba(244, 248, 255, 0.85);
+	background: var(--snow);
 	color: var(--ink);
 }
 

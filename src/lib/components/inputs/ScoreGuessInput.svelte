@@ -16,6 +16,17 @@
 	} = $props();
 
 	const answers = $derived(value as (number | null)[]);
+	// typed inputs, by quiz index (null for rating items), so Enter can move to the next one
+	let fields = $state<(HTMLInputElement | null)[]>([]);
+
+	/** Enter: jump to the next typed answer; on the last one, submit (if everything is answered) */
+	function enterFrom(i: number, e: KeyboardEvent) {
+		if (e.key !== 'Enter') return;
+		e.preventDefault();
+		const next = fields.findIndex((f, j) => j > i && f);
+		if (next >= 0) fields[next]?.focus();
+		else onenter?.();
+	}
 	function set(i: number, v: number | null) {
 		const next = [...answers];
 		next[i] = v;
@@ -31,7 +42,7 @@
 {#if mode === 'self'}
 	<div class="quiz">
 		{#each q.quiz as item, i}
-			<div class="item">
+			<div class="item" class:rating={item.type === 'likert'}>
 				<p>{item.q}{item.type === 'number' ? ' = ?' : ''}</p>
 				{#if item.type === 'number'}
 					<input
@@ -39,11 +50,10 @@
 						inputmode="numeric"
 						autocomplete="off"
 						aria-label={item.q}
+						bind:this={fields[i]}
 						value={answers[i] ?? ''}
 						oninput={(e) => onNumber(i, e)}
-						onkeydown={(e) => {
-							if (e.key === 'Enter') onenter?.();
-						}}
+						onkeydown={(e) => enterFrom(i, e)}
 					/>
 				{:else}
 					<LikertInput
@@ -79,10 +89,18 @@
 	}
 	.item {
 		color: var(--ink);
-		--ink-soft: #4a5578;
-		background: var(--panel-dim);
+		--ink-soft: rgba(81, 17, 6, 0.72);
+		background: var(--card-bg);
 		border-radius: var(--blob-a);
 		padding: 0.7rem 1rem;
+	}
+	/* rating rows sit directly on the backdrop: no card, white text above and below the scale */
+	.item.rating {
+		background: transparent;
+		color: var(--snow);
+		--ink-soft: var(--snow);
+		padding-left: 0;
+		padding-right: 0;
 	}
 	.item p {
 		margin: 0 0 0.4rem;
@@ -93,7 +111,7 @@
 		font-family: var(--font-heading);
 		font-size: 1.8rem;
 		text-align: center;
-		background: #fff;
+		background: var(--snow);
 		border: none;
 		border-radius: 18px 24px 20px 26px;
 	}

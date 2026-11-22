@@ -9,16 +9,35 @@
 		children
 	}: { round: number; progress: number; pandaState: PandaState; children: Snippet } = $props();
 
-	// placeholder red panda (CSS filters stand in for the five state images)
-	const PANDA_IMG =
-		'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvROpvOPEotZwTJQKWdhBtCjgbXTW_jbmmQdtL0mo2-g&s=10';
-	const PANDA_FILTER: Record<PandaState, string> = {
-		relaxed: 'saturate(1.25) brightness(1.08) hue-rotate(-6deg)',
-		content: 'none',
-		cool: 'saturate(0.85) hue-rotate(25deg) brightness(1.02)',
-		chilly: 'saturate(0.6) hue-rotate(90deg) brightness(1.08)',
-		frozen: 'saturate(0.45) hue-rotate(150deg) brightness(1.3) contrast(0.9)'
+	import relaxedPanda from '#lib/assets/relaxedredpanda.png';
+	import contentPanda from '#lib/assets/contentredpanda.png';
+	import neutralPanda from '#lib/assets/neutralredpanda.png';
+	import chillyPanda from '#lib/assets/chillyredpanda.png';
+	import freezingPanda from '#lib/assets/freezingredpanda.png';
+	import snowtopper from '#lib/assets/snowtopper.png';
+	import trees from '#lib/assets/trees-long.png';
+
+	// One tree image per round (sunset, dusk, midnight); they cross-fade as the night goes on.
+	// Only one drawing exists so far, so every round uses it — swap in the others here.
+	const TREES = [trees, trees, trees];
+
+	// All five states are drawn. The images share a 1668x2388 canvas, so they're cropped to the same box
+	// (x 270–1449, y 415–1910 in source px) and drawn at the same scale. Roughly the bottom third
+	// of that box is empty space or a hanging tail, so each pose also has a `ground` line (source y
+	// where it actually touches down) and is lowered until that line sits on the snow.
+	const ART_W = 1179; // crop width (source px)
+	const ART_H = 1495; // crop height (source px)
+	const ART_TOP = 415; // crop top (source px)
+	const ART_BOTTOM = ART_TOP + ART_H;
+	const ART: Record<PandaState, { src: string; ground: number }> = {
+		relaxed: { src: relaxedPanda, ground: 1300 }, // sits on its curled tail
+		content: { src: contentPanda, ground: 1300 }, // curled up
+		cool: { src: neutralPanda, ground: 1300 }, // paws; tail hangs below
+		chilly: { src: chillyPanda, ground: 1300 }, // same pose as cool
+		frozen: { src: freezingPanda, ground: 1300 } // same pose as relaxed
 	};
+
+	const art = $derived(ART[pandaState]);
 </script>
 
 <div class="scene">
@@ -28,23 +47,30 @@
 	<!-- 2a. midground trees: placeholders that cross-fade per round -->
 	<div class="trees">
 		{#each ZONES as zone, i (zone)}
-			<div class="tree-layer" style:opacity={i === round ? 1 : 0}>
-				<span>tree placeholder · {zone}</span>
-			</div>
+			<img class="tree-layer" src={TREES[i]} alt="" style:opacity={i === round ? 1 : 0} />
 		{/each}
 	</div>
 
-	<!-- 3. snow bank (placeholder) -->
-	<div class="snow"></div>
+	<!-- 3. snow bank: a white rectangle with the drawn snow-topper strip along its top edge -->
+	<div class="snow">
+		<img class="topper" src={snowtopper} alt="" />
+	</div>
 
 	<!-- 2b. red panda, resting on the snow bank, in front of the trees -->
-	<img
+	<div
 		class="panda"
-		src={PANDA_IMG}
-		alt="red panda ({pandaState})"
-		referrerpolicy="no-referrer"
-		style:filter={PANDA_FILTER[pandaState]}
-	/>
+				style:aspect-ratio="{ART_W} / {ART_H}"
+		style:--drop={(ART_BOTTOM - art.ground) / ART_H}
+	>
+		<img
+			class="drawn"
+			src={art.src}
+			alt="red panda ({pandaState})"
+			style:width="{(1668 / ART_W) * 100}%"
+			style:left="{(-270 / ART_W) * 100}%"
+			style:top="{(-ART_TOP / ART_H) * 100}%"
+		/>
+	</div>
 
 	<div class="ui">{@render children()}</div>
 </div>
@@ -62,15 +88,15 @@
 		right: 0;
 		top: 0;
 		height: 300vh;
-		/* sunset at the top of the tall sky, midnight at the bottom */
+		/* THIS IS THE IMPORTANT GRADIENT BACKGROUND THING */
 		background: linear-gradient(
 			180deg,
-			#ffcf9c 0%,
-			#f7a07b 18%,
-			#c46a8e 38%,
-			#6f4a8f 55%,
-			#2d2f69 75%,
-			#10132e 100%
+			#de7e5d 0%,
+			#e6a998 18%,
+			#ac90a0 38%,
+			#7076a8 55%,
+			#32417e 75%,
+			#0b1f62 100%
 		);
 		transition: transform 2.4s cubic-bezier(0.45, 0, 0.2, 1);
 		z-index: 0;
@@ -81,43 +107,63 @@
 		left: 0;
 		right: 0;
 		bottom: calc(var(--snow-h) - 30px);
-		height: 38vh;
+		/* the artwork fills the lower ~46.5% (of the width) of trees.png; cap it on short screens */
+		height: min(46.6vw, 70vh);
 		z-index: 1;
+		pointer-events: none;
 	}
 	.tree-layer {
 		position: absolute;
 		inset: 0;
-		display: grid;
-		place-items: end center;
-		padding-bottom: 2.5rem;
-		background: linear-gradient(0deg, rgba(20, 40, 50, 0.55), rgba(20, 40, 50, 0));
-		color: rgba(255, 255, 255, 0.45);
-		font-size: 0.9rem;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: bottom center;
 		transition: opacity 2s ease;
 	}
 
 	.snow {
 		position: absolute;
-		left: -5vw;
-		right: -5vw;
+		left: 0;
+		right: 0;
 		bottom: 0;
 		height: var(--snow-h);
-		background: linear-gradient(180deg, #ffffff 0%, #dbe7fb 100%);
-		border-radius: 55% 45% 0 0 / 60px 80px 0 0;
+		background: var(--snow);
 		z-index: 2;
+	}
+	/* snowtopper.png is 2388x72: it sits on the rectangle's top edge, full width */
+	.topper {
+		position: absolute;
+		left: 0;
+		bottom: calc(100% - 1px); /* 1px overlap hides any seam */
+		width: 100%;
+		height: auto;
+		display: block;
+		pointer-events: none;
 	}
 
 	.panda {
 		position: absolute;
 		right: clamp(1rem, 7vw, 8rem);
-		bottom: calc(var(--snow-h) - 34px);
-		height: clamp(90px, 20vh, 190px);
-		width: auto;
+		--panda-h: clamp(130px, 28vh, 270px);
+		/* --drop = fraction of the panda's height that hangs below its ground line (tail/empty) */
+		/* ground line sits just inside the textured top edge of the snow (topper is 72/2388 of the width) */
+		bottom: calc(var(--snow-h) + 3.02vw - 24px - var(--panda-h) * var(--drop, 0));
+		height: var(--panda-h);
 		z-index: 3;
-		transition: filter 1.2s ease;
 		transform-origin: bottom center;
 		animation: sway 5s ease-in-out infinite;
 		pointer-events: none;
+	}
+	.panda {
+		overflow: hidden;
+	}
+	.panda img {
+		pointer-events: none;
+	}
+	.panda .drawn {
+		position: absolute;
+		height: auto;
 	}
 	@keyframes sway {
 		50% {

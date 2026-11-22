@@ -37,7 +37,7 @@
 		max-width: 64px;
 		aspect-ratio: 1;
 		border-radius: 50% 46% 54% 48%;
-		background: var(--panel-dim);
+		background: var(--card-bg);
 		font-size: 1.15rem;
 		transition:
 			transform 0.15s,
@@ -48,7 +48,7 @@
 	}
 	button.on {
 		background: var(--accent);
-		color: #fff;
+		color: var(--snow);
 		transform: scale(1.12);
 	}
 	.ends {

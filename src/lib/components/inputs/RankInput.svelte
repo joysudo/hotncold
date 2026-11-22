@@ -74,7 +74,8 @@
 		align-items: center;
 		gap: 0.8rem;
 		padding: 0.5rem 0.9rem;
-		background: var(--panel-dim);
+		background: rgba(255, 255, 255, 0.92);
+		color: var(--ink);
 		border-radius: var(--blob-a);
 		cursor: grab;
 		transition:
@@ -110,7 +111,7 @@
 		width: 32px;
 		height: 32px;
 		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.8);
+		background: var(--panel-dim);
 		font-size: 0.75rem;
 	}
 	.btns button:disabled {

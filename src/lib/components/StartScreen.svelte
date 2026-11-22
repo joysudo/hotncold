@@ -7,6 +7,15 @@
 	// svelte-ignore state_referenced_locally
 	let b = $state(game.names[1]);
 
+	let second: HTMLInputElement;
+
+	// Enter in the first name moves to the second; Enter in the second submits the form
+	function nextField(e: KeyboardEvent) {
+		if (e.key !== 'Enter') return;
+		e.preventDefault();
+		second.focus();
+	}
+
 	function enter(e: SubmitEvent) {
 		e.preventDefault();
 		game.begin([a.trim(), b.trim()]);
@@ -15,17 +24,29 @@
 
 <div class="wrap">
 	<form class="panel" onsubmit={enter}>
-		<h1>hot <small>&amp;</small> cold</h1>
+		<h1>hot <small>&amp;</small> <span class="cold">cold</span></h1>
 		<p class="tag">how well do you really know each other?</p>
 
 		<div class="names">
 			<label>
 				<span>partner one</span>
-				<input bind:value={a} maxlength="20" placeholder="Player 1" autocomplete="off" />
+				<input
+					bind:value={a}
+					maxlength="20"
+					placeholder="Player 1"
+					autocomplete="off"
+					onkeydown={nextField}
+				/>
 			</label>
 			<label>
 				<span>partner two</span>
-				<input bind:value={b} maxlength="20" placeholder="Player 2" autocomplete="off" />
+				<input
+					bind:this={second}
+					bind:value={b}
+					maxlength="20"
+					placeholder="Player 2"
+					autocomplete="off"
+				/>
 			</label>
 		</div>
 
@@ -58,6 +79,9 @@
 	h1 {
 		font-size: clamp(3rem, 10vw, 4.6rem);
 		color: var(--accent);
+	}
+	h1 .cold {
+		color: var(--cold);
 	}
 	h1 small {
 		font-size: 0.55em;

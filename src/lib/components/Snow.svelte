@@ -1,10 +1,10 @@
 <script lang="ts">
 	/**
 	 * 'around' – flakes fly in from the edges and settle around the (empty) centre of the screen.
-	 * 'up'     – flakes drift upward across the screen (round results).
+	 * 'fall'   – flakes fall from the top of the screen (round results).
 	 * `leaving` – flakes fly back off screen.
 	 */
-	let { mode = 'around', leaving = false }: { mode?: 'around' | 'up'; leaving?: boolean } =
+	let { mode = 'around', leaving = false }: { mode?: 'around' | 'fall'; leaving?: boolean } =
 		$props();
 
 	type Flake = { x: number; y: number; dx: number; dy: number; size: number; delay: number; dur: number };
@@ -71,12 +71,12 @@
 	.leaving .flake.around {
 		animation: fly-out 0.55s ease-in forwards;
 	}
-	.flake.up {
+	.flake.fall {
 		top: 0;
 		opacity: 0;
-		animation: rise var(--dur) linear var(--delay) infinite;
+		animation: fall var(--dur) linear var(--delay) infinite;
 	}
-	.leaving .flake.up {
+	.leaving .flake.fall {
 		animation: fade 0.4s forwards;
 	}
 
@@ -97,16 +97,19 @@
 			transform: translate(6px, 10px);
 		}
 	}
-	@keyframes rise {
+	@keyframes fall {
 		from {
-			transform: translateY(105vh);
+			transform: translateY(-10vh);
 			opacity: 0;
 		}
-		15% {
+		10% {
+			opacity: 0.95;
+		}
+		85% {
 			opacity: 0.95;
 		}
 		to {
-			transform: translateY(-10vh);
+			transform: translateY(105vh);
 			opacity: 0;
 		}
 	}

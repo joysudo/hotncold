@@ -19,14 +19,14 @@
 			<p class="names">{game.name(0)} &amp; {game.name(1)}</p>
 
 			<div class="highlights">
-				<div class="hl">
+				<div class="hl" style:--tier={best ? TIER_COLOR[best.tier] : undefined}>
 					<h4>best match</h4>
 					{#if best}
 						<p>{best.text}</p>
 						<p class="tag" style:color={TIER_COLOR[best.tier]}>{TIER_LABEL[best.tier]} · {best.actual}</p>
 					{/if}
 				</div>
-				<div class="hl">
+				<div class="hl" style:--tier={worst ? TIER_COLOR[worst.tier] : undefined}>
 					<h4>worst miss</h4>
 					{#if worst}
 						<p>{worst.text}</p>
@@ -70,8 +70,8 @@
 			{#each pairs as p (p.qid)}
 				<p class="qtext">{p.text}</p>
 				<div class="cols">
-					<div class="cell">{p.actual}</div>
-					<div class="cell" style:background="color-mix(in srgb, {TIER_COLOR[p.tier]} 38%, white)">
+					<div class="cell" style:--tier={TIER_COLOR[p.tier]}>{p.actual}</div>
+					<div class="cell" style:background="color-mix(in srgb, {TIER_COLOR[p.tier]} 62%, white)">
 						{p.anticipated}
 					</div>
 				</div>
@@ -119,7 +119,7 @@
 		text-align: left;
 	}
 	.hl {
-		background: var(--panel-dim);
+		background: color-mix(in srgb, var(--tier, var(--chilly)) 11%, white);
 		border-radius: var(--blob-a);
 		padding: 0.8rem 1rem;
 	}
@@ -129,7 +129,6 @@
 	}
 	.tag {
 		font-weight: 700;
-		filter: brightness(0.75);
 	}
 	.chart-title {
 		margin: 1.4rem 0 0.5rem;
@@ -139,7 +138,7 @@
 		gap: 1rem;
 		height: 150px;
 		align-items: stretch;
-		background: var(--panel-dim);
+		background: color-mix(in srgb, var(--tier, var(--chilly)) 11%, white);
 		border-radius: var(--blob-a);
 		padding: 0.8rem 1rem 0.5rem;
 	}
@@ -194,7 +193,7 @@
 		font-style: italic;
 	}
 	.cell {
-		background: var(--panel-dim);
+		background: color-mix(in srgb, var(--tier, var(--chilly)) 11%, white);
 		border-radius: var(--blob-a);
 		padding: 0.55rem 0.8rem;
 		overflow-wrap: anywhere;

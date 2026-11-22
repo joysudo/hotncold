@@ -1,17 +1,20 @@
 <script lang="ts">
-	let { text }: { text: string } = $props();
+	let { text, sub = '' }: { text: string; sub?: string } = $props();
+	import longsign from '#lib/assets/longsign-swapped-lighter.png';
+
 	// Capture once: while a sign is lifting away it must keep its own text, not pick up the next one.
 	// svelte-ignore state_referenced_locally
 	const label = text;
-
-	// placeholder sign art
-	const SIGN_IMG =
-		'https://t4.ftcdn.net/jpg/02/52/10/17/360_F_252101753_vR1AoclwIOLWcXfxQED1Xt00QyrafAwQ.jpg';
+	// svelte-ignore state_referenced_locally
+	const subLabel = sub;
 </script>
 
 <div class="sign">
-	<img src={SIGN_IMG} alt="" referrerpolicy="no-referrer" />
-	<h2>{label}</h2>
+	<img src={longsign} alt="" />
+	<div class="words">
+		{#if subLabel}<p class="sub">{subLabel}</p>{/if}
+		<h2>{label}</h2>
+	</div>
 </div>
 
 <style>
@@ -19,23 +22,38 @@
 		position: relative;
 		display: grid;
 		place-items: center;
-		min-width: min(78vw, 360px);
-		min-height: 96px;
-		padding: 1rem 2.4rem;
-		background: linear-gradient(180deg, #a6733f, #7d5230);
+		width: min(78vw, 340px);
+		/* the board itself is 1790x715 of the 2000x1397 png; crop away the transparent margin */
+		aspect-ratio: 1790 / 715;
+		padding: 0 12%;
 		overflow: hidden;
 	}
 	img {
 		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+		width: 111.7%;
+		left: -6.7%;
+		top: -50.3%;
+		height: auto;
+		pointer-events: none;
+	}
+	.words {
+		position: relative;
+		display: grid;
+		justify-items: center;
+		gap: 0.15rem;
+	}
+	.sub {
+		margin: 0;
+		font-size: clamp(0.8rem, 2.2vw, 1rem);
+		letter-spacing: 0.06em;
+		text-transform: lowercase;
+		color: var(--ink);
 	}
 	h2 {
 		position: relative;
-		font-size: clamp(1.6rem, 4.5vw, 2.4rem);
-		color: #fff7e6;
+		font-size: clamp(1.4rem, 4vw, 2.1rem);
+		line-height: 1.05;
+		color: var(--ink);
 		text-align: center;
 	}
 </style>

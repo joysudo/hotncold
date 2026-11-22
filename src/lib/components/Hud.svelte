@@ -61,7 +61,14 @@
 		height: 14px;
 		border-radius: 999px;
 		/* frozen (left) -> relaxed (right) */
-		background: linear-gradient(90deg, #b9a9ff, #5aa9f5 28%, #8fd6c8 50%, #ffb84d 75%, #ff6b3d);
+		background: linear-gradient(
+			90deg,
+			var(--frozen) 10%,
+			var(--chilly) 30%,
+			var(--lukewarm) 50%,
+			var(--warm) 70%,
+			var(--hot) 90%
+		);
 	}
 	.marker {
 		position: absolute;

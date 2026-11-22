@@ -28,7 +28,7 @@
 				in:fly|global={{ y: -360, duration: 800, delay: 650, opacity: 1 }}
 				out:fly|global={{ y: -360, duration: 600, opacity: 1 }}
 			>
-				<WoodenSign text={game.signText} />
+				<WoodenSign text={game.signText} sub={game.signSub} />
 			</div>
 		{/if}
 	{/key}

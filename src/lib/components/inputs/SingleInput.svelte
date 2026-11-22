@@ -28,7 +28,7 @@
 	}
 	button {
 		padding: 0.55rem 0.4rem;
-		background: var(--panel-dim);
+		background: var(--card-bg);
 		border-radius: var(--blob-a);
 		font-size: 1rem;
 		transition:
@@ -40,7 +40,7 @@
 	}
 	button.on {
 		background: var(--accent);
-		color: #fff;
+		color: var(--snow);
 		transform: scale(1.05);
 	}
 </style>
