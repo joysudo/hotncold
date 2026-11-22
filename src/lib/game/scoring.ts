@@ -13,7 +13,15 @@ export const TIER_LABEL: Record<Tier, string> = {
 };
 export const TIER_POINTS: Record<Tier, number> = { exact: 100, warm: 60, cold: 20, frozen: 0 };
 /** how much each tier warms (+) or cools (-) the red panda (0–100 scale) */
-export const TIER_TEMP: Record<Tier, number> = { exact: 12, warm: 5, cold: -7, frozen: -13 };
+/** extra weight on misses: a cold answer cools the panda 1.25x as much, a frozen one 1.5x */
+const COLD_PENALTY = 1.25;
+const FROZEN_PENALTY = 1.5;
+export const TIER_TEMP: Record<Tier, number> = {
+	exact: 12,
+	warm: 5,
+	cold: -7 * COLD_PENALTY, // -8.75
+	frozen: -13 * FROZEN_PENALTY // -19.5
+};
 export const TIER_COLOR: Record<Tier, string> = {
 	exact: 'var(--hot)',
 	warm: 'var(--warm)',
